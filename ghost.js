@@ -899,7 +899,7 @@ function stickMove(e) {
 
 if (stickZone) {
     stickZone.addEventListener("pointerdown", (e) => {
-        if (stickId !== null) return;
+        if (stickId !== null && stickId !== e.pointerId) stickReset();      // a lost finger must never lock the stick
         e.preventDefault();
         stickId = e.pointerId;
         stickZone.setPointerCapture(e.pointerId);
@@ -916,6 +916,9 @@ if (stickZone) {
     stickZone.addEventListener("pointerup", (e) => { if (e.pointerId === stickId) stickReset(); });
     stickZone.addEventListener("pointercancel", (e) => { if (e.pointerId === stickId) stickReset(); });
     stickZone.addEventListener("contextmenu", (e) => e.preventDefault());
+    stickZone.addEventListener("lostpointercapture", (e) => { if (e.pointerId === stickId) stickReset(); });
+    window.addEventListener("blur", stickReset);
+    document.addEventListener("visibilitychange", () => { if (document.hidden) stickReset(); });
 }
 
 if (rollBtn) {
