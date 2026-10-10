@@ -944,7 +944,7 @@ body.mobile #panel {
     position: relative;
     border-bottom: 0;
 }
-body.mobile #controls { position: absolute; inset: 0; display: flex; gap: 0; }
+body.mobile #controls { position: absolute; inset: 0; display: flex; gap: 0; align-items: stretch; }
 body.mobile #pad, body.mobile #coin, body.mobile #hint { display: none; }
 
 /* the touch joystick: drag anywhere in the left area */
@@ -952,6 +952,7 @@ body.mobile #stickZone {
     display: block;
     position: relative;
     flex: 1;
+    height: 100%;
     touch-action: none;
 }
 #stickBase {
