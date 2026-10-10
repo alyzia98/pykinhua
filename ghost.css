@@ -1,0 +1,996 @@
+/* Arcade cabinet style */
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: radial-gradient(circle at 50% 30%, #2b2b45, #0a0a14 75%);
+    font-family: "Press Start 2P", "Courier New", monospace;
+    color: #fff;
+    text-align: center;
+}
+
+/* The cabinet body */
+#cabinet {
+    width: 480px;
+    padding: 0 20px 20px;
+    margin: 20px 0;
+    background: linear-gradient(90deg, #b3122b, #e0203d 20%, #e0203d 80%, #b3122b);
+    border: 4px solid #000;
+    border-radius: 40px 40px 8px 8px;
+    box-shadow: 0 0 40px rgba(224, 32, 61, 0.35), 10px 10px 0 #000;
+}
+
+/* Glowing sign on top */
+#marquee {
+    margin: 0 -20px 20px;
+    padding: 18px 10px;
+    background: #ffe14d;
+    border-bottom: 4px solid #000;
+    border-radius: 36px 36px 0 0;
+    box-shadow: inset 0 0 20px rgba(255, 150, 0, 0.6);
+}
+
+h1 {
+    margin: 0;
+    font-size: 20px;
+    color: #c4122f;
+    text-shadow: 2px 2px 0 #000;
+    animation: glow 1.5s steps(2) infinite;
+}
+
+@keyframes glow {
+    50% { color: #ff5a3c; }
+}
+
+/* Black frame around the screen */
+#bezel {
+    background: #111;
+    padding: 14px;
+    border: 4px solid #000;
+    border-radius: 14px;
+    box-shadow: inset 0 0 12px #000;
+}
+
+#timer {
+    margin: 0 0 10px;
+    font-size: 11px;
+    color: #4dffb8;
+    text-shadow: 0 0 8px #4dffb8;
+}
+
+#game {
+    /* graveyard floor: moss patches, cracked stone tiles, little pebbles */
+    background-color: #0b0e12;
+    background-image:
+        radial-gradient(circle at 14% 18%, rgba(40, 90, 50, 0.38), transparent 22%),
+        radial-gradient(circle at 84% 30%, rgba(40, 90, 50, 0.3), transparent 20%),
+        radial-gradient(circle at 30% 86%, rgba(40, 90, 50, 0.32), transparent 24%),
+        radial-gradient(circle at 78% 82%, rgba(70, 40, 90, 0.3), transparent 22%),
+        radial-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1.6px),
+        repeating-conic-gradient(#0e1217 0 25%, #131a22 0 50%);
+    background-size: auto, auto, auto, auto, 25px 25px, 50px 50px;
+    width: 400px;
+    height: 400px;
+    font-size: 45px;
+    line-height: 1;
+    position: relative;
+    margin: 0 auto;
+    border-radius: 18px;
+    box-shadow: inset 0 0 90px rgba(0, 0, 0, 0.95), 0 0 18px rgba(77, 255, 184, 0.25);
+    overflow: hidden;
+}
+
+#ghost,
+#player {
+    position: absolute;
+    left: 0;
+    top: 0;
+    will-change: transform;
+}
+
+#ghost {
+    animation: blink 0.8s steps(2) infinite;
+}
+
+/* Angry ghost (after 30 seconds): red glow */
+#ghost.angry {
+    filter: drop-shadow(0 0 10px #ff2d2d) saturate(1.8) hue-rotate(-20deg);
+}
+
+/* Ghost glows red right before it dashes */
+#ghost.warning {
+    filter: drop-shadow(0 0 12px #ff2d2d) drop-shadow(0 0 4px #ff2d2d);
+    animation: blink 0.15s steps(2) infinite;
+}
+
+@keyframes blink {
+    50% { opacity: 0.6; }
+}
+
+/* CRT scanlines + glass shine on top of the screen */
+#scanlines {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, transparent 35%),
+        repeating-linear-gradient(transparent 0 2px, rgba(0, 0, 0, 0.25) 2px 4px);
+}
+
+/* Game over screen */
+#overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 14px;
+    background: rgba(0, 0, 0, 0.88);
+    font-size: 11px;
+}
+
+#overlay h2 {
+    margin: 0;
+    font-size: 18px;
+    color: #ff4d4d;
+    text-shadow: 2px 2px 0 #000;
+}
+
+#overlay p {
+    margin: 0;
+    line-height: 1.6;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Control panel */
+#panel {
+    margin: 18px -20px 0;
+    padding: 20px 0;
+    background: #22223a;
+    border-top: 4px solid #000;
+    border-bottom: 4px solid #000;
+    box-shadow: inset 0 6px 0 rgba(255, 255, 255, 0.08);
+}
+
+#pad {
+    display: grid;
+    grid-template-columns: repeat(3, 64px);
+    grid-template-areas:
+        ".    up    ."
+        "left down  right";
+    gap: 10px;
+    justify-content: center;
+}
+
+#up    { grid-area: up; }
+#down  { grid-area: down; }
+#left  { grid-area: left; }
+#right { grid-area: right; }
+
+/* D-pad buttons */
+#pad button {
+    width: 64px;
+    height: 64px;
+    padding: 0;
+    position: relative;
+    cursor: pointer;
+    background: #3a3a5c;
+    border: 4px solid #000;
+    border-radius: 12px;
+    box-shadow: 0 6px 0 #14142a, 0 8px 0 #000;
+    touch-action: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    --c: #4dffb8;
+}
+
+/* Arrow drawn with CSS */
+#pad button::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 0;
+    height: 0;
+    border: solid transparent;
+    transform: translate(-50%, -50%);
+}
+#pad #up::before    { border-width: 0 13px 18px;    border-bottom-color: var(--c); }
+#pad #down::before  { border-width: 18px 13px 0;    border-top-color: var(--c); }
+#pad #left::before  { border-width: 13px 18px 13px 0; border-right-color: var(--c); }
+#pad #right::before { border-width: 13px 0 13px 18px; border-left-color: var(--c); }
+
+#pad button:hover { background: #46466e; }
+
+#pad button.pressed,
+#pad button:active {
+    transform: translateY(5px);
+    box-shadow: 0 1px 0 #14142a, 0 3px 0 #000;
+    --c: #ffe14d;
+    background: #2e2e4c;
+}
+
+#pad button:focus-visible { outline: 3px solid #ffe14d; outline-offset: 3px; }
+
+#hint {
+    margin: 22px 0 0;
+    font-size: 9px;
+    color: #8f8fb8;
+}
+
+#restart {
+    padding: 12px 18px;
+    font-family: inherit;
+    font-size: 12px;
+    color: #000;
+    cursor: pointer;
+    background: #4dffb8;
+    border: 4px solid #000;
+    border-radius: 8px;
+    box-shadow: 4px 4px 0 #fff;
+}
+
+#restart:active { transform: translate(4px, 4px); box-shadow: none; }
+
+/* Coin slot at the bottom */
+#coin {
+    margin-top: 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+#slot {
+    width: 70px;
+    height: 12px;
+    background: #000;
+    border: 3px solid #ffe14d;
+    border-radius: 4px;
+}
+
+#coin span {
+    font-size: 9px;
+    color: #ffe14d;
+    animation: blinkText 1s steps(2) infinite;
+}
+
+@keyframes blinkText {
+    50% { opacity: 0; }
+}
+
+/* ---------- Shotgun ---------- */
+#topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    height: 24px;
+}
+#timer { margin: 0; }
+
+#hud {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 8px;
+    color: #4dc3ff;
+}
+.invisible { visibility: hidden; }
+
+.shell {
+    display: inline-block;
+    width: 10px;
+    height: 22px;
+    margin-left: 4px;
+    border: 2px solid #000;
+    border-radius: 4px 4px 1px 1px;
+    background: linear-gradient(#e0203d 62%, #d9b44a 62%);
+    vertical-align: middle;
+}
+.shell.empty { opacity: 0.2; }
+.shell.loading { animation: blinkText 0.4s steps(2) infinite; }
+
+/* Gun the player is holding (turns to aim at the ghost) */
+#gun {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 0;
+    height: 0;
+    z-index: 1;
+    pointer-events: none;
+    will-change: transform;
+}
+#gunInner {
+    position: absolute;
+    left: 6px;
+    top: -8px;
+    transform-origin: 0 50%;
+}
+#gunInner svg { display: block; width: 46px; height: 16px; overflow: visible; }
+
+/* Reload animation: gun tilts open and the pump slides */
+#gunInner.reloading { animation: reloadTilt 0.7s ease-in-out infinite; }
+#gunInner.reloading .pump { animation: pumpSlide 0.35s ease-in-out infinite alternate; }
+@keyframes reloadTilt {
+    0%, 100% { transform: rotate(0); }
+    30%, 70% { transform: rotate(28deg) translateY(2px); }
+}
+@keyframes pumpSlide {
+    to { transform: translateX(-7px); }
+}
+
+/* Shotgun lying on the map */
+#pickup {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    will-change: transform;
+}
+#pickupInner svg { display: block; width: 56px; height: 20px; overflow: visible; }
+#pickup::after {
+    content: "";
+    display: none;
+    position: absolute;
+    inset: -2px;
+    border: 3px solid #ffe14d;
+    border-radius: 50%;
+    animation: ping 1s ease-out infinite;
+}
+#pickup.landed::after { display: block; }
+#pickup.landed #pickupInner { animation: bob 1s ease-in-out infinite; }
+@keyframes ping {
+    0%   { transform: scale(0.6); opacity: 1; }
+    100% { transform: scale(1.5); opacity: 0; }
+}
+@keyframes bob {
+    50% { transform: translateY(-4px); }
+}
+
+/* Ghost health bar + hit look */
+#ghostHp {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 45px;
+    height: 7px;
+    box-sizing: border-box;
+    background: #000;
+    border: 1px solid #fff;
+    z-index: 1;
+    will-change: transform;
+}
+#ghostHpFill {
+    height: 100%;
+    width: 100%;
+    background: #ff4d4d;
+    transition: width 0.2s;
+}
+#ghost.stunned {
+    filter: grayscale(1) brightness(2.2) drop-shadow(0 0 10px #fff);
+    animation: blink 0.1s steps(2) infinite;
+}
+
+/* Shot effects */
+.pellet {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #ffe14d;
+    box-shadow: 0 0 6px #ff9d00;
+    pointer-events: none;
+}
+.flash {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 36px;
+    height: 36px;
+    margin: -18px 0 0 -18px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #fff 0, #ffe14d 40%, rgba(255, 120, 0, 0) 70%);
+    pointer-events: none;
+}
+.popup {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 3;
+    font-size: 11px;
+    line-height: 1;
+    white-space: nowrap;
+    text-shadow: 2px 2px 0 #000;
+    pointer-events: none;
+}
+#toast {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3;
+    width: max-content;
+    max-width: 90%;
+    white-space: pre-line;
+    padding: 8px 10px;
+    font-size: 9px;
+    line-height: 1.5;
+    text-align: center;
+    color: #ffe14d;
+    background: rgba(0, 0, 0, 0.85);
+    border: 2px solid #ffe14d;
+}
+#overlay.win h2 { color: #4dffb8; }
+
+/* Fire + reload buttons */
+#controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 36px;
+}
+#actions { display: flex; gap: 12px; align-items: center; }
+#actions button {
+    width: 64px;
+    height: 64px;
+    padding: 0;
+    border: 4px solid #000;
+    border-radius: 50%;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 8px;
+    color: #fff;
+    text-shadow: 1px 1px 0 #000;
+    touch-action: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+#fire {
+    background: radial-gradient(circle at 35% 30%, #ff6a6a, #d41a1a 70%);
+    box-shadow: 0 6px 0 #7a0b0b, 0 8px 0 #000;
+}
+#reload {
+    background: radial-gradient(circle at 35% 30%, #6ac8ff, #1a78d4 70%);
+    box-shadow: 0 6px 0 #0b3f7a, 0 8px 0 #000;
+}
+#actions button:active {
+    transform: translateY(5px);
+    box-shadow: 0 1px 0 #000;
+}
+#actions button.locked { opacity: 0.35; cursor: not-allowed; }
+#hint { margin: 20px 0 0; line-height: 1.8; }
+
+/* ---------- Ghost special skills ---------- */
+#ghost.casting {
+    filter: drop-shadow(0 0 14px #c04dff) brightness(1.4);
+    animation: blink 0.12s steps(2) infinite;
+}
+
+.tp-marker {
+    position: absolute;
+    width: 45px;
+    height: 45px;
+    box-sizing: border-box;
+    border: 3px dashed #c04dff;
+    border-radius: 50%;
+    font-size: 26px;
+    line-height: 39px;
+    text-align: center;
+    color: #c04dff;
+    text-shadow: 0 0 10px #c04dff;
+    pointer-events: none;
+    animation: blinkText 0.3s steps(2) infinite;
+}
+
+.pulse-ring {
+    position: absolute;
+    box-sizing: border-box;
+    border: 3px dashed #c04dff;
+    border-radius: 50%;
+    background: rgba(192, 77, 255, 0.12);
+    pointer-events: none;
+    animation: blinkText 0.3s steps(2) infinite;
+}
+
+.orb {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 24px;
+    height: 24px;
+    font-size: 22px;
+    line-height: 24px;
+    text-align: center;
+    pointer-events: none;
+    filter: drop-shadow(0 0 6px #ff7a00);
+    will-change: transform;
+}
+
+/* Player debuffs */
+#player.slowed   { filter: hue-rotate(180deg) saturate(2) drop-shadow(0 0 8px #4dc3ff); }
+#player.confused { filter: invert(1) drop-shadow(0 0 8px #c04dff); }
+
+#overlay p { white-space: pre-line; }
+
+/* ---------- Obstacles (tombstones) ---------- */
+.obstacle {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    box-sizing: border-box;
+    background: linear-gradient(#8a8aa8, #5a5a78);
+    border: 3px solid #4dffb8;
+    border-radius: 18px 18px 3px 3px;
+    box-shadow: 0 4px 0 #000;
+    font-size: 8px;
+    line-height: 34px;
+    text-align: center;
+    color: #2b2b45;
+    transform-origin: 50% 100%;
+    pointer-events: none;
+}
+.obstacle.fading { animation: blinkText 0.25s steps(2) infinite; }
+
+.ob-warn {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    box-sizing: border-box;
+    border: 3px dashed #c04dff;
+    background: rgba(192, 77, 255, 0.2);
+    pointer-events: none;
+    animation: blinkText 0.3s steps(2) infinite;
+}
+
+/* ---------- New skills: decoys, lightning, vortex ---------- */
+.decoy {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 45px;
+    height: 45px;
+    opacity: 0.65;
+    pointer-events: none;
+    filter: hue-rotate(60deg) saturate(1.6) drop-shadow(0 0 8px #c04dff);
+    will-change: transform;
+}
+.decoy svg { display: block; width: 100%; height: 100%; }
+.decoy.fading { animation: blinkText 0.15s steps(2) infinite; }
+
+.bolt-warn {
+    position: absolute;
+    width: 72px;
+    height: 72px;
+    box-sizing: border-box;
+    border: 3px dashed #ffe14d;
+    border-radius: 50%;
+    background: rgba(255, 225, 77, 0.2);
+    pointer-events: none;
+    animation: blinkText 0.2s steps(2) infinite;
+}
+.bolt {
+    position: absolute;
+    top: 0;
+    width: 24px;
+    z-index: 2;
+    pointer-events: none;
+    background: linear-gradient(90deg, rgba(255,225,77,0), #fff 35%, #fff 65%, rgba(255,225,77,0));
+    box-shadow: 0 0 16px 4px rgba(255, 225, 77, 0.9);
+}
+
+.pull-ring {
+    position: absolute;
+    box-sizing: border-box;
+    border: 3px dashed #c04dff;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(192, 77, 255, 0.28), rgba(192, 77, 255, 0.05) 70%);
+    pointer-events: none;
+}
+
+/* ---------- Bats ---------- */
+.bat {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 30px;
+    height: 30px;
+    font-size: 26px;
+    line-height: 30px;
+    text-align: center;
+    pointer-events: none;
+    filter: drop-shadow(0 0 6px #b36bff);
+    will-change: transform;
+}
+.bat span {
+    display: inline-block;
+    animation: flap 0.15s steps(2) infinite alternate;
+}
+.bat.fading { animation: blinkText 0.15s steps(2) infinite; }
+@keyframes flap {
+    from { transform: scaleX(1); }
+    to   { transform: scaleX(0.55); }
+}
+
+/* ---------- Boss fight ---------- */
+.boss-bar { position: absolute; left: 14px; right: 14px; bottom: 10px; z-index: 3; pointer-events: none; }
+.boss-name {
+    margin-bottom: 4px; text-align: left; font-family: Georgia, "Times New Roman", serif;
+    font-size: 12px; letter-spacing: 2px; color: #e6c97a; text-shadow: 2px 2px 0 #000;
+}
+.boss-track { position: relative; height: 12px; box-sizing: border-box; border: 2px solid #7a6a3a; background: #1a0f0f; }
+.boss-fill, .boss-chip { position: absolute; left: 0; top: 0; bottom: 0; width: 100%; }
+.boss-fill { background: #b32121; transition: width 0.12s; }
+.boss-chip { background: #e6c97a; transition: width 0.6s 0.35s; }
+.boss-bar.immune .boss-fill { background: #6b5a9a; }
+.boss-bar.immune .boss-chip { display: none; }
+
+.banner {
+    position: absolute; left: 0; right: 0; top: 40%; z-index: 4; padding: 14px 0; text-align: center;
+    font-family: Georgia, "Times New Roman", serif; font-size: 30px; letter-spacing: 8px;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.85) 30%, rgba(0, 0, 0, 0.85) 70%, transparent);
+    text-shadow: 0 0 16px currentColor; pointer-events: none;
+}
+
+#game.phase2 { box-shadow: inset 0 0 70px rgba(255, 60, 0, 0.5), 0 0 22px rgba(255, 80, 0, 0.5); }
+#ghost.phase2:not(.casting):not(.warning):not(.stunned) {
+    filter: drop-shadow(0 0 8px #ffb000) drop-shadow(0 0 18px #ff2d00) saturate(1.6);
+}
+
+.orb.deadly { filter: drop-shadow(0 0 8px #ff2d00) brightness(1.3); }
+
+.meteor-warn, .meteor-boom {
+    position: absolute; width: 84px; height: 84px; box-sizing: border-box; border-radius: 50%; pointer-events: none;
+}
+.meteor-warn { border: 3px dashed #ff3b00; background: rgba(255, 60, 0, 0.22); animation: blinkText 0.25s steps(2) infinite; }
+.meteor-boom { background: radial-gradient(circle, #fff 0, #ffd000 30%, #ff3b00 60%, rgba(255, 60, 0, 0) 72%); }
+
+.beam-warn, .beam {
+    position: absolute; width: 400px; transform-origin: 0 50%; pointer-events: none;
+}
+.beam-warn { height: 4px; margin-top: -2px; background: rgba(255, 90, 0, 0.8); box-shadow: 0 0 8px #ff5a00; animation: blinkText 0.25s steps(2) infinite; }
+.beam { height: 22px; margin-top: -11px; background: linear-gradient(#ff3b00, #ffe27a, #ff3b00); box-shadow: 0 0 16px #ff6a00; }
+
+/* "YOU DIED" / "ENEMY FELLED" screen */
+#overlay { background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.92) 35%, rgba(0,0,0,0.92) 65%, rgba(0,0,0,0.6)); }
+#overlay #overlayTitle {
+    font-family: Georgia, "Times New Roman", serif; font-weight: normal; font-size: 32px; letter-spacing: 8px;
+    color: #b81c1c; text-shadow: 0 0 16px rgba(184, 28, 28, 0.7);
+}
+#overlay.win #overlayTitle { color: #e6c97a; text-shadow: 0 0 16px rgba(230, 201, 122, 0.7); }
+
+/* Phase 2: the ghost is much bigger (it grows around its own center) */
+/* (the boss stays the same size in phase 2) */
+
+/* ---------- Phase 2 boss: rage + bat form ---------- */
+/* Enraged: redder, angrier glow */
+#ghost.phase2.rage:not(.casting):not(.stunned) {
+    filter: drop-shadow(0 0 10px #ff0000) drop-shadow(0 0 24px #ff2d00) saturate(2.4) hue-rotate(-15deg);
+}
+
+/* Bat form: the vampire disappears, the bats are the boss */
+#ghost.batform { visibility: hidden; }
+
+.fbat {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 36px;
+    height: 36px;
+    font-size: 32px;
+    line-height: 36px;
+    text-align: center;
+    pointer-events: none;
+    z-index: 2;
+    filter: drop-shadow(0 0 8px #b36bff);
+    will-change: transform;
+}
+.fbat span {
+    display: inline-block;
+    animation: flap 0.12s steps(2) infinite alternate;
+}
+/* red flash = this bat is about to spit fire or dive */
+.fbat.warn {
+    filter: drop-shadow(0 0 10px #ff2d00) drop-shadow(0 0 4px #ff2d00);
+    animation: blinkText 0.15s steps(2) infinite;
+}
+
+/* Fire wall: green box shows where the hole in the wall will be */
+.gap-warn {
+    position: absolute;
+    box-sizing: border-box;
+    border: 2px dashed #4dffb8;
+    background: rgba(77, 255, 184, 0.2);
+    pointer-events: none;
+    animation: blinkText 0.25s steps(2) infinite;
+}
+
+/* ---------- Hearts + dodge roll ---------- */
+#hearts {
+    position: absolute;
+    left: 10px;
+    top: 8px;
+    z-index: 3;
+    font-size: 18px;
+    line-height: 1;
+    letter-spacing: 3px;
+    pointer-events: none;
+    text-shadow: 0 0 6px #000;
+}
+#roll {
+    background: radial-gradient(circle at 35% 30%, #7dffb0, #1fa857 70%);
+    box-shadow: 0 6px 0 #0d5c2c, 0 8px 0 #000;
+}
+#actions button.cooling { opacity: 0.45; }
+#player.hurt { animation: blinkText 0.12s steps(2) infinite; }
+/* DASH: heavy, weighty dash */
+#player.dashing { filter: brightness(1.3) drop-shadow(0 0 8px #4dffb8); }
+.dash-ghost {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 1;
+    pointer-events: none;
+    filter: brightness(0) invert(1) sepia(1) saturate(6) hue-rotate(110deg) drop-shadow(0 0 8px #4dffb8);
+    will-change: opacity;
+}
+.dash-ghost::before { display: none; }
+.dash-ghost.face-left svg { transform: scaleX(-1); }
+.dash-streak {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 1;
+    height: 3px;
+    pointer-events: none;
+    transform-origin: 0 50%;
+    border-radius: 2px;
+    background: linear-gradient(90deg, #fff, rgba(77, 255, 184, 0.8) 40%, rgba(77, 255, 184, 0));
+    box-shadow: 0 0 8px rgba(77, 255, 184, 0.8);
+}
+.dash-ring {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 1;
+    width: 56px;
+    height: 20px;
+    border: 3px solid rgba(190, 255, 230, 0.9);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+/* ---------- Drawn characters (SVG) ---------- */
+#ghost svg, #player svg {
+    display: block;
+    width: 45px;
+    height: 45px;
+    overflow: visible;
+    position: relative;
+    animation: bob 0.6s steps(2) infinite;         /* 2-frame idle bounce, like an old 2D game */
+}
+@keyframes bob { 50% { top: -3px; } }
+#player.face-left svg { transform: scaleX(-1); }
+.bat span, .fbat span { display: block; width: 100%; height: 100%; }
+.bat svg, .fbat svg { display: block; width: 100%; height: 100%; }
+
+/* ---------- Phone support ---------- */
+html, body {
+    height: 100%;
+    overflow: hidden;                 /* no scrolling: the machine is scaled to fit instead */
+    overscroll-behavior: none;
+    touch-action: manipulation;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+    -webkit-tap-highlight-color: transparent;
+}
+body { height: 100dvh; min-height: 0; }
+#cabinet { margin: 0; flex: none; transform-origin: center center; }
+
+/* bigger buttons for thumbs */
+#pad { grid-template-columns: repeat(3, 70px); }
+#pad button, #actions button { width: 70px; height: 70px; }
+#actions { gap: 10px; }
+#controls { gap: 30px; }
+#pad, #pad button { touch-action: none; }
+
+#restart { touch-action: manipulation; }
+
+@media (pointer: coarse) { #hint { display: none; } }
+
+#rotate {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    text-align: center;
+    line-height: 1.8;
+    font-family: "Press Start 2P", "Courier New", monospace;
+    font-size: 14px;
+    color: #ffe14d;
+    background: #0a0a14;
+}
+@media (orientation: landscape) and (max-height: 520px) { #rotate { display: flex; } }
+
+/* ---------- Sound button ---------- */
+#marquee { position: relative; }
+#mute {
+    position: absolute;
+    top: 50%;
+    right: 26px;
+    transform: translateY(-50%);
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer;
+    background: #fff3b0;
+    border: 3px solid #000;
+    border-radius: 50%;
+    box-shadow: 0 3px 0 #000;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+}
+#mute:active { transform: translateY(calc(-50% + 3px)); box-shadow: none; }
+
+
+/* ---------- Better visuals ---------- */
+
+/* drifting fog over the floor (under the characters) */
+#game::before {
+    content: "";
+    position: absolute;
+    inset: -50%;
+    pointer-events: none;
+    background:
+        radial-gradient(circle at 20% 30%, rgba(170, 190, 210, 0.12), transparent 28%),
+        radial-gradient(circle at 70% 60%, rgba(170, 190, 210, 0.09), transparent 32%),
+        radial-gradient(circle at 42% 85%, rgba(170, 190, 210, 0.08), transparent 28%);
+    animation: fogDrift 26s ease-in-out infinite alternate;
+}
+@keyframes fogDrift { to { transform: translate(14%, 7%); } }
+/* phase 2: the fog turns red */
+#game.phase2::before { filter: sepia(1) saturate(5) hue-rotate(-35deg); }
+
+/* shadows under the characters give depth */
+#ghost::before, #player::before {
+    content: "";
+    position: absolute;
+    left: 5px;
+    right: 5px;
+    bottom: -3px;
+    height: 10px;
+    border-radius: 50%;
+    background: radial-gradient(rgba(0, 0, 0, 0.65), transparent 70%);
+}
+#ghost.rage::before {
+    left: -4px;
+    right: -4px;
+    bottom: -5px;
+    height: 16px;
+    background: radial-gradient(rgba(255, 40, 0, 0.8), transparent 70%);
+    animation: blinkText 0.5s steps(2) infinite;
+}
+
+/* the boss flashes white when you hit him */
+#ghost.hitflash svg { filter: brightness(3) saturate(0); }
+
+/* fire flickers (only opacity changes, so it stays smooth on phones) */
+.orb { animation: flicker 0.16s steps(2) infinite alternate; }
+@keyframes flicker { to { opacity: 0.78; } }
+.orb.deadly { filter: drop-shadow(0 0 9px #ff2d00) brightness(1.5); }
+
+/* sparks + embers */
+.spark {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 2;
+    border-radius: 50%;
+    pointer-events: none;
+    will-change: transform, opacity;
+}
+
+/* bigger, brighter title sign */
+#marquee { text-shadow: 0 0 10px rgba(196, 18, 47, 0.5); }
+
+
+/* ---------- Phone layout: big touch controls ---------- */
+#stickZone { display: none; }
+
+body.mobile { align-items: flex-start; }
+body.mobile #cabinet {
+    width: 100%;
+    max-width: none;
+    box-sizing: border-box;
+    height: 100dvh;
+    margin: 0;
+    padding: 0 8px;
+    border-width: 0;
+    border-radius: 0;
+    box-shadow: none;
+    display: flex;
+    flex-direction: column;
+    transform: none !important;
+}
+body.mobile #marquee { flex: none; margin: 0 -8px 8px; padding: 9px 56px 9px 8px; border-bottom-width: 3px; }
+body.mobile #marquee h1 { font-size: 12px; }
+body.mobile #mute { right: 10px; width: 40px; height: 40px; }
+body.mobile #bezel { flex: none; align-self: center; }
+body.mobile #panel {
+    flex: 1;
+    min-height: 0;
+    margin: 12px -8px 0;
+    padding: 0;
+    position: relative;
+    border-bottom: 0;
+}
+body.mobile #controls { position: absolute; inset: 0; display: flex; gap: 0; }
+body.mobile #pad, body.mobile #coin, body.mobile #hint { display: none; }
+
+/* the touch joystick: drag anywhere in the left area */
+body.mobile #stickZone {
+    display: block;
+    position: relative;
+    flex: 1;
+    touch-action: none;
+}
+#stickBase {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 124px;
+    height: 124px;
+    margin: -62px 0 0 -62px;
+    border-radius: 50%;
+    border: 4px solid rgba(255, 255, 255, 0.28);
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.03));
+    box-shadow: inset 0 0 18px rgba(0, 0, 0, 0.5);
+    pointer-events: none;
+}
+#stickBase.active { border-color: rgba(77, 255, 184, 0.75); box-shadow: 0 0 16px rgba(77, 255, 184, 0.35), inset 0 0 18px rgba(0, 0, 0, 0.5); }
+#stickKnob {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 56px;
+    height: 56px;
+    margin: -28px 0 0 -28px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #8affd6, #1fa87a 70%);
+    border: 3px solid #000;
+    box-shadow: 0 4px 0 #0b5c43;
+}
+
+/* big action buttons on the right */
+body.mobile #actions { position: relative; display: block; flex: 1; gap: 0; }
+body.mobile #actions button { position: absolute; font-size: 10px; border-width: 4px; }
+body.mobile #fire   { width: 100px; height: 100px; right: 12px; bottom: 20px; font-size: 12px; }
+body.mobile #reload { width: 74px;  height: 74px;  right: 24px; bottom: 132px; }
+body.mobile #roll   { width: 74px;  height: 74px;  right: 124px; bottom: 74px; }
+
+/* ---------- Phase 3: final form ---------- */
+#game.phase3 { box-shadow: inset 0 0 90px rgba(255, 0, 60, 0.75), 0 0 26px rgba(255, 0, 60, 0.6); }
+#game.phase3::before { filter: sepia(1) saturate(7) hue-rotate(-45deg); }
+#ghost.phase3::before { left: -10px; right: -10px; bottom: -8px; height: 22px; background: radial-gradient(rgba(255, 0, 60, 0.9), transparent 70%); }
+.boss-bar.final .boss-fill { animation: blinkText 0.35s steps(2) infinite; }
+.boss-bar.final .boss-name { color: #ff4d6d; }

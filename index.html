@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Run from the Ghost</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="ghost.css">
+</head>
+<body>
+    <div id="cabinet">
+
+        <div id="marquee">
+            <h1>Run from the Ghost</h1>
+            <button id="mute" aria-label="Sound on or off">🔊</button>
+        </div>
+
+        <div id="bezel">
+            <div id="topbar">
+                <p id="timer">Survived: 0s</p>
+                <div id="hud" class="invisible">
+                    <span id="reloadText"></span>
+                    <span id="ammo"></span>
+                </div>
+            </div>
+
+            <div id="game">
+                <div id="pickup" class="hidden"><div id="pickupInner"></div></div>
+
+                <span id="ghost">🧛‍♀️</span>
+                <span id="player">🧑‍⚖️</span>
+
+                <div id="gun" class="hidden"><div id="gunInner"></div></div>
+                <div id="ghostHp" class="hidden"><div id="ghostHpFill"></div></div>
+                <div id="toast" class="hidden"></div>
+
+                <div id="overlay" class="hidden">
+                    <h2 id="overlayTitle">The ghost got you!</h2>
+                    <p id="finalScore"></p>
+                    <button id="restart" onclick="restartGame()">Play again</button>
+                </div>
+
+                <div id="scanlines"></div>
+            </div>
+        </div>
+
+        <div id="panel">
+            <div id="controls">
+                <div id="stickZone"><div id="stickBase"><div id="stickKnob"></div></div></div>
+                <div id="pad">
+                    <button id="up" data-dir="up" aria-label="Up"></button>
+                    <button id="left" data-dir="left" aria-label="Left"></button>
+                    <button id="down" data-dir="down" aria-label="Down"></button>
+                    <button id="right" data-dir="right" aria-label="Right"></button>
+                </div>
+                <div id="actions">
+                    <button id="roll">FLASH</button>
+                    <button id="reload" class="locked">RELOAD</button>
+                    <button id="fire" class="locked">FIRE</button>
+                </div>
+            </div>
+            <p id="hint">MOVE: W A S D or arrows<br>FIRE: SPACE &nbsp; RELOAD: R<br>FLASH STEP: SHIFT or K<br>SOUND ON/OFF: M</p>
+        </div>
+
+        <div id="coin">
+            <div id="slot"></div>
+            <span>Insert coin</span>
+        </div>
+
+    </div>
+
+    <script src="ghost.js"></script>
+</body>
+</html>
